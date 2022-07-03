@@ -1,0 +1,26 @@
+{
+  "priority": 1,
+  "request": {
+    "method": "POST",
+    "urlPathPattern": "/v1/person",
+    "bodyPatterns": [
+      {
+        "equalToJson": {
+          "name": "Name",
+          "age": 10
+        }
+      }
+    ],
+    "basicAuthCredentials": {
+      "username": "jeff@example.com",
+      "password": "jeffteenjefftyjeff"
+    }
+  },
+  "response": {
+    "status": 404,
+    "bodyFileName": "insert-person-bad-request.json",
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}
