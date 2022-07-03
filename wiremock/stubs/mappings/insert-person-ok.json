@@ -1,0 +1,27 @@
+{
+  "priority": 1,
+  "request": {
+    "method": "POST",
+    "urlPathPattern": "/v1/person",
+    "bodyPatterns": [
+      {
+        "equalToJson": {
+          "name": "Name",
+          "age": 10,
+          "last_name": "LastName"
+        }
+      }
+    ],
+    "basicAuthCredentials": {
+      "username": "jeff@example.com",
+      "password": "jeffteenjefftyjeff"
+    }
+  },
+  "response": {
+    "status": 201,
+    "bodyFileName": "insert-person-ok.json",
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}
