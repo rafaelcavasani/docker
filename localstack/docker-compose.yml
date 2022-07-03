@@ -1,0 +1,20 @@
+version: "3.1"
+
+services:
+  localstack:
+    image: localstack/localstack
+    network_mode: bridge
+    ports:
+      - '4566-4583:4566-4583'
+    environment:
+      - AWS_DEFAULT_REGION=sa-east-1
+      - AWS_ACCESS_KEY_ID=123
+      - AWS_SECRET_ACCESS_KEY=123
+      - EDGE_PORT=4566
+      - DEFAULT_REGION=sa-east-1
+      - SERVICES=lambda,s3,sqs,dynamodb
+      - HOST_TMP_FOLDER=/tmp/localstack
+      - DOCKER_HOST=unix:///var/run/docker.sock
+    volumes:
+      - "./:/tmp/localstack"
+      - "/var/run/docker.sock:/var/run/docker.sock"
