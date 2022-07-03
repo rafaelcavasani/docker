@@ -1,11 +1,12 @@
 {
+  "priority": 1,
   "request": {
     "method": "GET",
-    "urlPathPattern": "/v1/resource/([a-zA-Z0-9-\\_]*)"
+    "urlPathPattern": "/v1/person/404"
   },
   "response": {
-    "status": 200,
-    "bodyFileName": "response-ok.json",
+    "status": 404,
+    "bodyFileName": "get-person-not-found.json",
     "headers": {
       "Content-Type": "application/json"
     }

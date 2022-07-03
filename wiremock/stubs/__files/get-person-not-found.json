@@ -1,0 +1,5 @@
+{
+  "status": 404,
+  "code": "PERSON_NOT_FOUND",
+  "message": "Person not found."
+}

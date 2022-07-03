@@ -1,0 +1,14 @@
+{
+  "priority": 2,
+  "request": {
+    "method": "GET",
+    "urlPathPattern": "/v1/person/([a-zA-Z0-9-\\_]*)"
+  },
+  "response": {
+    "status": 200,
+    "bodyFileName": "get-person-ok.json",
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}
