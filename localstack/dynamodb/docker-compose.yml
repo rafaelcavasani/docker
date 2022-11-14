@@ -1,0 +1,65 @@
+version: "3.1"
+
+services:
+  localstack:
+    image: localstack/localstack
+    network_mode: bridge
+    ports:
+      - '4566:4566'
+    environment:
+      - AWS_DEFAULT_REGION=us-east-1
+      - AWS_ACCESS_KEY_ID=123
+      - AWS_SECRET_ACCESS_KEY=123
+      - EDGE_PORT=4566
+      - DEFAULT_REGION=us-east-1
+      - SERVICES=dynamodb
+      - HOST_TMP_FOLDER=/tmp/localstack
+      - DOCKER_HOST=unix:///var/run/docker.sock
+    volumes:
+      - "./:/tmp/localstack"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+
+  aws_cli:
+    image: amazon/aws-cli
+    depends_on:
+      - localstack
+    network_mode: bridge
+    links:
+      - localstack
+    entrypoint: /bin/sh -c
+    command: >
+      '
+      yum update && yum install -y jq;
+      COUNTER=15;
+      DYNAMO_DESIRED_STATE="running";
+      SERVICE_ACTUAL_STATE=0;
+      
+      while [ $$COUNTER -ne 0 ] && [ $$SERVICE_ACTUAL_STATE != 1 ]
+      
+      do
+        RESPONSE=$$(curl http://localstack:4566/health?redirect | jq ".services.dynamodb")
+        echo "Response from Localstack DynamoDB >>>> $$RESPONSE";
+        if [[ $$RESPONSE == *"$$DYNAMO_DESIRED_STATE"* ]]
+        then 
+          SERVICE_ACTUAL_STATE=1; 
+          break;
+        else 
+          SERVICE_ACTUAL_STATE=0; 
+        fi;
+
+        COUNTER=$$((COUNTER-1));
+        echo "Service is not ready yet! $$COUNTER retries left.";
+        sleep 3;
+      done;
+      
+      echo backend is up;
+      echo "########### Creating profile ###########";
+      aws configure set aws_access_key_id 123 --profile=localstack;
+      aws configure set aws_secret_access_key 123 --profile=localstack;
+      aws configure set region us-east-1 --profile=localstack;
+      echo "########### Listing profile ###########";
+      aws configure list --profile=localstack;
+      
+      echo "########### Creating DynamoDB ###########";
+      aws dynamodb create-table --endpoint-url=http://localstack:4566 --region=us-east-1 --table-name Checkout --attribute-definitions AttributeName=pk,AttributeType=S --key-schema AttributeName=pk,KeyType=HASH --provisioned-throughput ReadCapacityUnits=5,WriteCapacityUnits=5 --profile=localstack;
+      '
