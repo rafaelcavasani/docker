@@ -19,6 +19,13 @@ exporters:
     resource_to_telemetry_conversion:
       enabled: true
     enable_open_metrics: true
+  awss3:
+    s3uploader:
+        region: 'us-east-1'
+        endpoint: 'http://localhost:4566'
+        s3_bucket: 's3-export'
+        s3_prefix: 'metric'
+        s3_partition: 'minute'
 processors:
   batch:
   spanmetrics:
