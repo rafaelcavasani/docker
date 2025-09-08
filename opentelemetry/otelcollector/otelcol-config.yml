@@ -2,12 +2,11 @@ receivers:
   otlp:
     protocols:
       grpc:
+        endpoint: 0.0.0.0:4317
       http:
         cors:
           allowed_origins:
-            - "http://*"
-            - "https://*"
-
+            - "*"
 exporters:
   otlp:
     endpoint: "jaeger:4317"
@@ -28,14 +27,14 @@ exporters:
         s3_partition: 'minute'
 processors:
   batch:
-  spanmetrics:
-    metrics_exporter: prometheus
+  # spanmetrics:
+  #   metrics_exporter: prometheus
 
 service:
   pipelines:
     traces:
       receivers: [otlp]
-      processors: [spanmetrics, batch]
+      processors: [batch]
       exporters: [logging, otlp]
     metrics:
       receivers: [otlp]
